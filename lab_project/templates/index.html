@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compact Heat Exchanger Calculator</title>
+    <style>
+        :root {
+            --red-tdi: #fc475a;
+            --color-black: #000;
+            --blue-green-tdi: #1db4a1;
+            --pink-tdi: #fa479a;
+            --blue-tdi: #4684ff;
+            --purple-tdi: #534d89;
+            --green-tdi: #4b9859;
+            --yellow-tdi: #ffa018;
+        }
+
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            width: 80%;
+            margin-bottom: 50px;
+            margin-top: 50px;
+            /* Adjusted width for better spacing */
+            max-width: 1000px;
+            box-sizing: border-box;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #333;
+        }
+
+        .form-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* Two columns layout */
+            gap: 20px;
+        }
+
+        section {
+            border: 2px solid rgba(52, 152, 219, 0.5);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        section h2 {
+            color: black;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: box-shadow 0.3s, border-color 0.3s;
+            width: 100%;
+            /* Full-width input */
+        }
+
+        input:hover,
+        select:hover {
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+            border-color: #3498db;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+            /* Full-width button */
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Heat Exchanger Calculator</h1>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <div class="form-box">
+                <!-- Surface Section -->
+                <section class="surface-section">
+                    <h2>Surface Information</h2>
+                    <label for="surface_data_c">Cold Fluid Surface Type</label>
+                    <select id="c_dropdown" name="surface_data_c" required>
+                        <option value="">--Choose Surface type--</option>
+                        <option value=1>1/8-13.95 or 0.125-13.95</option>
+                        <option value=2>1/8-16.00 or 0.125-16.00</option>
+                        <option value=3>1/8-19.82D or 0.125-19.82D</option>
+                        <option value=4>41/8-20.06</option>
+                    </select>
+
+                    <label for="surface_data_h">Hot Fluid Surface Type</label>
+                    <select id="h_dropdown" name="surface_data_h" required>
+                        <option value="">--Choose Surface type--</option>
+                        <option value=1>1/8-13.95 or 0.125-13.95</option>
+                        <option value=2>1/8-16.00 or 0.125-16.00</option>
+                        <option value=3>1/8-19.82D or 0.125-19.82D</option>
+                        <option value=4>41/8-20.06</option>
+                    </select>
+                </section>
+
+                <!-- Cold Fluid Section -->
+                <section class="cold-section">
+                    <h2>Cold Fluid Information</h2>
+                    <input type="number" step="0.0001" min="0" name="Temp_c_in"
+                        placeholder="Cold fluid inlet Temperature (in *C)" required>
+                    <input type="number" name="mass_c" placeholder="Mass Flow Rate of Cold fluid (in Kg/s)" required
+                        step="0.0001" min="0">
+                    <input type="number" name="specific_heat_c" placeholder="Specific Heat of Cold fluid (in KJ/kg K)"
+                        required step="0.0001" min="0">
+                    <input type="number" name="d_viscos_c" placeholder="Dynamic Viscosity of Cold fluid (in 1e-4 pa/s)"
+                        required step="0.0001" min="0">
+                    <input type="number" name="conduct_c" placeholder="Conductivity of Cold fluid (in W/mk)" required
+                        step="0.0001" min="0">
+                </section>
+
+                <!-- Hot Fluid Section -->
+                <section class="hot-section">
+                    <h2>Hot Fluid Information</h2>
+                    <input type="number" name="Temp_h_in" placeholder="Hot fluid inlet Temperature (in *C)" required
+                        step="0.0001" min="0">
+                    <input type="number" name="Temp_h_out" placeholder="Exit temperature of hot fluid required (in *C)"
+                        required step="0.0001" min="0">
+                    <input type="number" name="mass_h" placeholder="Mass Flow Rate of Hot fluid (in Kg/s)" required
+                        step="0.0001" min="0">
+                    <input type="number" name="specific_heat_h" placeholder="Specific Heat of Hot fluid (in KJ/kg K)"
+                        required step="0.0001" min="0">
+                    <input type="number" name="d_viscos_h" placeholder="Dynamic Viscosity of Hot fluid (in 1e-4 pa/s)"
+                        required step="0.0001" min="0">
+                    <input type="number" name="conduct_h" placeholder="Conductivity of Hot fluid (in W/mk)" required
+                        step="0.0001" min="0">
+                </section>
+
+                <!-- Dimensions Section -->
+                <section class="dimension-section">
+                    <h2>Heat Exchanger Dimensions</h2>
+                    <input type="number" name="height" placeholder="Height of Heat exchanger (in m)" required
+                        step="0.0001" min="0">
+                    <input type="number" name="depth" placeholder="Depth of Heat exchanger (in m)" required
+                        step="0.0001" min="0">
+                    <input type="number" name="width" placeholder="Width of Heat exchanger (in m)" required
+                        step="0.0001" min="0">
+                    <select name="op" required>
+                        <option value="">Does cold fluid passes across width?</option>
+                        <option value=1>Yes</option>
+                        <option value=0>No</option>
+                    </select>
+                </section>
+
+                <!-- Additional Parameters Section -->
+                <section class="additional-section">
+                    <h2>Additional Parameters</h2>
+                    <input type="number" name="metal_conduct"
+                        placeholder="Conductivity of Metal used in Heat Exchanger (W/mk)" required step="0.0001"
+                        min="0">
+                    <input type="number" name="press_in_c" placeholder="Pressure of Cold fluid at inlet (Kpa)" required
+                        step="0.0001" min="0">
+                    <input type="number" name="press_drop_all_c"
+                        placeholder="Allowed pressure drop for Cold fluid (Kpa)" required step="0.0001" min="0">
+                    <input type="number" name="press_in_h" placeholder="Pressure of Hot fluid at inlet (Kpa)" required
+                        step="0.0001" min="0">
+                    <input type="number" name="press_drop_all_h" placeholder="Allowed pressure drop for Hot fluid (Kpa)"
+                        required step="0.0001" min="0">
+                </section>
+            </div>
+
+            <!-- Calculate Button -->
+            <div style="width: 50%;">
+                <button type="submit">Calculate</button>
+            </div>
+        </form>
+
+        <!-- Output Section -->
+        <section class="output">
+            <h2>Output:</h2>
+            <ul>
+                <li>Total Expected Heat Exchange between fluid (Q) (in KW): <strong>{{Heat}}</strong></li>
+                <li>Exit Temperature of the Cold Fluid is (in *C): <strong>{{Temp_c_out}}</strong></li>
+                <li>Pressure loss for the Cold fluid (in Kpa): <strong>{{press_loss_c}}</strong></li>
+                <li>Pressure loss for the Hot fluid (in Kpa): <strong>{{press_loss_h}}</strong></li>
+                <li>NTU of system: <strong>{{NTU}}</strong></li>
+                <li>Overall Heat transfer coefficient of the system is (in W/m²k):
+                    <strong>{{overall_heat_coef}}</strong>
+                <li>Effectiveness: <strong>{{effectiveness}}</strong>
+
+                </li>
+            </ul>
+
+
+            <h3>{{remark}}</h3>
+        </section>
+    </div>
+
+</body>
+
+</html>
